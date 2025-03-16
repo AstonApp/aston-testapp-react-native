@@ -52,7 +52,7 @@ Sigue estos pasos para instalar y configurar la aplicación de ejemplo:
     cd ..
     ```
 
-5. **Uso**
+5. **Uso**: 
     Para ejecutar la aplicación de ejemplo y ver el Aston SDK en acción:
     ```
     npx react-native start
@@ -122,7 +122,7 @@ export type AstonConfiguration = {
     apiKey: string;                    // Requerido: Clave de API proporcionada por el equipo de Aston
     theme?: ThemeConfig;               // Opcional: Configuración de tema para personalizar colores y estilos
     NavigationBar?: React.FC<AstonNavigationBarProps>; // Opcional: Componente personalizado para la barra de navegación
-} | null;
+}
 ```
 
 - **apiKey**: Clave única proporcionada por el equipo de Aston para autenticar y habilitar el SDK. Sin esto, el SDK no funcionará.
@@ -264,3 +264,5 @@ const styles = StyleSheet.create({
 - **Personalización**: Tanto theme como NavigationBar son opcionales, pero si los omitís, el SDK usará valores predeterminados.
 
 - **Dependencias**: Asegurate de que las peerDependencies (react-native, @react-navigation/stack, etc.) estén instaladas en tu proyecto, como se detalla en la sección anterior.
+
+Y listo! Ya tenes todo lo necesario para comenzar a usar el SDK de Aston. Happy coding!
