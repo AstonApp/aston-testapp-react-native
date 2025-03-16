@@ -1,79 +1,266 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Aston SDK - Bare React Native Example
 
-# Getting Started
+## Objetivo
+El propósito de este repositorio es proporcionar una aplicación de ejemplo sencilla en React Native bare que integra el SDK de Aston, una biblioteca diseñada para facilitar la implementación de funcionalidades educativas en aplicaciones móviles. 
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+Este proyecto tiene como objetivo:
+- **Demostración rápida**: Mostrar cómo funciona el SDK de Aston en un entorno real, permitiendo a los desarrolladores y clientes ver sus capacidades en acción.
+- **Guía de integración**: Servir como una referencia práctica para que los clientes comprendan cómo integrar el SDK en sus propias aplicaciones React Native bare, incluyendo la configuración inicial, navegación y customización.
+- **Base reproducible**: Ofrecer un punto de partida limpio y funcional que los desarrolladores puedan usar para experimentar, probar y personalizar el SDK según sus necesidades.
 
-## Step 1: Start the Metro Server
+Este ejemplo está construido con un enfoque minimalista para mantener la claridad, pero incluye los elementos esenciales para interactuar con el Aston SDK, como navegación basada en stacks y una interfaz básica para explorar sus características.
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+## Requisitos previos
+Para utilizar este repositorio y ejecutar la aplicación de ejemplo, necesitarás:
 
-To start Metro, run the following command from the _root_ of your React Native project:
+- **React Native**: Familiaridad con los fundamentos de React Native, como componentes, navegación y el uso de hooks.
+- **JavaScript/TypeScript**: Comprensión de JavaScript moderno (ES6+) y, preferiblemente, nociones de TypeScript, ya que el Aston SDK y esta aplicación usan tipado estático para mayor robustez.
 
+## Instalación TestApp
+Sigue estos pasos para instalar y configurar la aplicación de ejemplo:
+
+1. **Clona el repositorio**:
+    ```
+    git clone git@github.com:AstonApp/aston-testapp-react-native.git
+    cd aston-sdk-bare-example
+    ```
+
+2. **Instala las dependencias**:
+    ```
+    npm install
+    ```
+
+3. **Instala el Aston SDK**:
+    El sdk ya se encuentra declarado en el package.json y debería instalarse como parte del paso 2, en caso de ser necesario, puedes instalarlo explícitamente de esta manera:
+    ```
+    npm install ./aston-sdk-X.X.X.tgz
+    ```
+
+4. **Configura el entorno**:
+
+    **iOS**:
+    ```
+    cd ios
+    pod install
+    cd ..
+    ```
+
+    **Android**:
+    ```
+    cd android
+    ./gradlew
+    cd ..
+    ```
+
+5. **Uso**
+    Para ejecutar la aplicación de ejemplo y ver el Aston SDK en acción:
+    ```
+    npx react-native start
+    ```
+
+6. **Explora la app**:
+    La aplicación inicia con una pantalla simple que tiene 2 inputs y un botón para abrir el Aston SDK.
+
+    - **Aston API KEY**: El apiKey es un valor requerido para poder iniciar y será proporcionado por el equipo de Aston.
+    - **Integrator user id**: Identificador único de usuario, en esta testapp puede ingresar cualquier valor. (El sdk recordará el progreso de cada uno).
+
+    Al presionar el botón, navegarás al dashboard de educación del SDK, donde podés interactuar con sus funcionalidades (como lecciones o quizzes).
+
+# Integración del Aston SDK
+
+Esta sección detalla cómo integrar el SDK de Aston en una aplicación React Native bare desde 0, incluyendo la instalación de dependencias y la configuración necesaria.
+
+## Requisitos previos
+El SDK utiliza `peerDependencies` y `dependencies` en su `package.json` para gestionar sus dependencias de manera eficiente:
+
+- **`dependencies`**: Estas son las librerías que el SDK incluye internamente y que se instalan automáticamente al agregar el paquete `.tgz`.
+- **`peerDependencies`**: Estas son librerías que el SDK necesita para funcionar, pero que deben ser instaladas explícitamente por el cliente en su proyecto. Esto permite al cliente controlar la versión exacta de estas dependencias y asegura compatibilidad con su aplicación. En el caso de Aston, las `peerDependencies` incluyen:
+  - `react`, `react-dom`, y `react-native`: Fundamentales para cualquier app React Native.
+  - `@react-navigation/native`, `@react-navigation/stack`, y `react-native-gesture-handler`: Necesarios para la navegación basada en stacks.
+  - `react-native-video` y `react-native-svg`: Librerías con componentes nativos (ver abajo).
+
+### Por qué `react-native-video` y `react-native-svg` se instalan del lado del cliente
+El SDK usa `react-native-video` para reproducir contenido multimedia y `react-native-svg` para renderizar gráficos vectoriales. Estas librerías están listadas como `peerDependencies` por que ambas contienen código nativo (C++/Java/Objective-C) que debe vincularse al proyecto del cliente mediante autolinking (React Native >= 0.60) o pasos manuales. El SDK no puede realizar esta vinculación por sí mismo al instalarse como un paquete `.tgz`, ya que depende del entorno del cliente.
+
+Para instalarlas en tu proyecto:
 ```bash
-# using npm
-npm start
-
-# OR using Yarn
-yarn start
+npm install react-native-video react-native-svg
 ```
 
-## Step 2: Start your Application
+## Instalación del SDK
+1. **Agrega el Aston SDK al proyecto**:
+   - Descargá el paquete `aston-sdk-X.X.X.tgz` (Proporcionado por el equipo de Aston)
+   - Instalalo en tu proyecto con:
+     ```bash
+     npm install /ruta/a/aston-sdk-X.X.X.tgz
+     ```
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+2. **Configura las dependencias nativas**:
+   - **iOS**: Navegá a la carpeta `ios` y ejecutá:
+     ```bash
+     cd ios
+     pod install
+     cd ..
+     ```
+   - **Android**: Navega a la carpeta `android` y ejecutá:
+     ```
+     cd android
+     ./gradlew
+     cd ..
+     ```
+## Setup
 
-### For Android
+Antes de usar el Aston SDK en tu aplicación, es necesario configurarlo correctamente mediante la función `AstonSDK.init`. Esta configuración debe realizarse antes de invocar el `AstonNavigator` o cualquier otra funcionalidad del SDK. A continuación, te explicamos qué necesita el SDK para funcionar y cómo configurarlo.
 
-```bash
-# using npm
-npm run android
+### Configuración requerida
+El SDK requiere una configuración inicial que se pasa a través de un objeto `AstonConfiguration`. Este objeto define las propiedades esenciales y opcionales para personalizar el comportamiento y la apariencia del SDK.
 
-# OR using Yarn
-yarn android
+```tsx
+import { AstonConfiguration, ThemeConfig, AstonNavigationBarProps } from '@aston/sdk';
+
+export type AstonConfiguration = {
+    apiKey: string;                    // Requerido: Clave de API proporcionada por el equipo de Aston
+    theme?: ThemeConfig;               // Opcional: Configuración de tema para personalizar colores y estilos
+    NavigationBar?: React.FC<AstonNavigationBarProps>; // Opcional: Componente personalizado para la barra de navegación
+} | null;
 ```
 
-### For iOS
+- **apiKey**: Clave única proporcionada por el equipo de Aston para autenticar y habilitar el SDK. Sin esto, el SDK no funcionará.
 
-```bash
-# using npm
-npm run ios
+- **theme**: Objeto opcional que define colores, estilos de texto, botones y tarjetas para personalizar la UI del SDK (ver ejemplo abajo).
 
-# OR using Yarn
-yarn ios
+- **NavigationBar**: Componente opcional que reemplaza la barra de navegación predeterminada del SDK con una versión personalizada.
+
+### Inicialización del SDK
+
+```tsx
+import { AstonSDK, AstonNavigator } from '@aston/sdk';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+
+type RootStackParamList = {
+  Home: undefined;
+  Aston: undefined;
+};
+
+export default function EducationScreen({ apiKey, integratorUserId }: { apiKey: string; integratorUserId: string }) {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+  // Inicializa el SDK antes de usarlo
+  AstonSDK.init({
+    apiKey,                           // Clave de API requerida
+    theme: themeConfig,               // Tema personalizado (opcional)
+    NavigationBar: AstonNavigationBar // Barra de navegación personalizada (opcional)
+  });
+
+  return (
+    <AstonNavigator
+      integratorUserId={integratorUserId} // Identificador único del usuario
+      onExit={() => navigation.goBack()}  // Función para salir del SDK
+    />
+  );
+}
 ```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+### Ejemplo de themeConfig
+El objeto ThemeConfig permite personalizar la apariencia del SDK. Podes ver nuestro manual de tipografias en figma: https://www.figma.com/design/NbgHeH3KVokpLSXFqAU9sT/Manual-de-Tipograf%C3%ADas?node-id=0-1&p=f&t=n33DLLx90jaJYk9s-0 
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+Aquí un ejemplo completo:
 
-## Step 3: Modifying your App
+```tsx
+const themeConfig: ThemeConfig = {
+  colors: {
+    primary: '#7F4293',      // Color principal
+    background: '#FFFFFF',   // Fondo
+    textPrimary: '#000000',  // Texto principal
+    positive: '#31B700',     // Éxito
+    negative: '#E80202',     // Error
+    contrast: '#fff49b',     // Contraste
+  },
+  textStyles: {
+    heading: { fontSize: 20, lineHeight: 22, fontFamily: 'Montserrat-Regular' },
+    headingMedium: { fontSize: 20, lineHeight: 22, fontFamily: 'Montserrat-Medium' },
+    headingStrong: { fontSize: 20, lineHeight: 22, fontFamily: 'Montserrat-Bold' },
+    body: { fontSize: 16, lineHeight: 22, fontFamily: 'Montserrat-Regular' },
+    bodyMedium: { fontSize: 16, lineHeight: 22, fontFamily: 'Montserrat-Medium' },
+    bodyStrong: { fontSize: 16, lineHeight: 22, fontFamily: 'Montserrat-Bold' },
+  },
+  navBar: {
+    navBarTextStyle: { fontSize: 18, lineHeight: 24, fontFamily: 'Montserrat-Bold' },
+    navBarColor: '#FFFFFF',
+  },
+  buttonStyle: {
+    style: { width: '100%', alignItems: 'center', justifyContent: 'center', borderRadius: 24, elevation: 3, paddingVertical: 8 },
+    primaryTextStyle: { fontSize: 16, lineHeight: 20, fontFamily: 'Montserrat-Bold', color: 'white' },
+    secondaryTextStyle: { fontSize: 16, lineHeight: 20, fontFamily: 'Montserrat-Bold', color: '#804190' },
+    primary: { backgroundColor: '#804190', borderWidth: 1.5, borderColor: '#804190' },
+    secondary: { backgroundColor: 'white', borderWidth: 1.5, borderColor: '#804190' },
+  },
+  cardStyles: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 20,
+    padding: 16,
+    backgroundColor: '#fff',
+  },
+};
+```
 
-Now that you have successfully run the app, let's modify it.
+### Ejemplo de NavigationBar personalizada
+Podés proporcionar un componente personalizado para la barra de navegación que reciba title y goBack como props:
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+```tsx
+import React from 'react';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+const AstonNavigationBar = ({ title, goBack }: AstonNavigationBarProps) => {
+  return (
+    <View style={{ ...styles.container, backgroundColor: themeConfig.colors.primary }}>
+      <View style={styles.sideContainer}>
+        <Pressable onPress={goBack}>
+          <Text numberOfLines={1} style={styles.title}>Back</Text>
+        </Pressable>
+      </View>
+      <View style={styles.titleContainer}>
+        <Text numberOfLines={2} style={styles.title}>{title}</Text>
+      </View>
+      <View style={styles.sideContainer} />
+    </View>
+  );
+};
 
-## Congratulations! :tada:
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    height: 64,
+    width: '100%',
+  },
+  sideContainer: {
+    width: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  titleContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+  },
+  title: {
+    textAlign: 'center',
+    flexWrap: 'wrap',
+  },
+});
+```
 
-You've successfully run and modified your React Native App. :partying_face:
+### Notas importantes
+- **Orden**: Llamá a AstonSDK.init antes de renderizar AstonNavigator, o recibirás un error como "AstonSDK is not initialized!".
 
-### Now what?
+- **Errores**: Si omitís el apiKey, el SDK arrojará "API_KEY and userID from Integrator are required".
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
+- **Personalización**: Tanto theme como NavigationBar son opcionales, pero si los omitís, el SDK usará valores predeterminados.
 
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+- **Dependencias**: Asegurate de que las peerDependencies (react-native, @react-navigation/stack, etc.) estén instaladas en tu proyecto, como se detalla en la sección anterior.
