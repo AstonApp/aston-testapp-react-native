@@ -16,6 +16,7 @@ export default function EducationScreen({ apiKey, integratorUserId }: EducationS
     AstonSDK.init({
         apiKey,
         theme: themeConfig,
+        environment: 'development',
         NavigationBar: AstonNavigationBar
     })
 

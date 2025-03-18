@@ -120,12 +120,15 @@ import { AstonConfiguration, ThemeConfig, AstonNavigationBarProps } from '@aston
 
 export type AstonConfiguration = {
     apiKey: string;                    // Requerido: Clave de API proporcionada por el equipo de Aston
+    environment: string;               // Requerido: Ambiente en el que se va a ejecutar el SDK
     theme?: ThemeConfig;               // Opcional: Configuración de tema para personalizar colores y estilos
     NavigationBar?: React.FC<AstonNavigationBarProps>; // Opcional: Componente personalizado para la barra de navegación
 }
 ```
 
 - **apiKey**: Clave única proporcionada por el equipo de Aston para autenticar y habilitar el SDK. Sin esto, el SDK no funcionará.
+
+- **environment**: Ambiente en el que se ejecutará el SDK. Puede ser `development` o `production`. Cada ambiente tiene sus propias API_KEYS
 
 - **theme**: Objeto opcional que define colores, estilos de texto, botones y tarjetas para personalizar la UI del SDK (ver ejemplo abajo).
 
@@ -149,6 +152,7 @@ export default function EducationScreen({ apiKey, integratorUserId }: { apiKey: 
   // Inicializa el SDK antes de usarlo
   AstonSDK.init({
     apiKey,                           // Clave de API requerida
+    environment: 'development',
     theme: themeConfig,               // Tema personalizado (opcional)
     NavigationBar: AstonNavigationBar // Barra de navegación personalizada (opcional)
   });
