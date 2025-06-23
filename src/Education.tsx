@@ -28,6 +28,7 @@ export default function EducationScreen({
     apiKey,
     theme: themeConfig,
     environment: 'development',
+    // NavigationBar: AstonNavigationBar // Si queres utilizar tu propia navigationBar en el SDK, envia tu componente acá
   });
 
   const goBack = () => {

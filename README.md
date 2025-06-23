@@ -167,7 +167,7 @@ export default function EducationScreen({ apiKey, integratorUserId }: { apiKey: 
 ```
 
 ### *IMPORTANTE*: Si vas a usar una barra de navegación personalizada (navigationBar), y querés controlar la navegación (por ejemplo, un botón de "volver" en la barra), asegurate de:
-- "Pasar un `ref` al `AstonNavigator` para poder acceder a sus métodos de navegación.
+- "Enviar una `referencia` al `AstonNavigator` para poder acceder a sus métodos de navegación.
 - "Llamar a `astonRef.current?.goBack()` desde tu componente externo.
 - "Activar `customNavigation: true` al instanciar el SDK"
 
