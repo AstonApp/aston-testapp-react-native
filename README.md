@@ -166,6 +166,11 @@ export default function EducationScreen({ apiKey, integratorUserId }: { apiKey: 
 }
 ```
 
+### *IMPORTANTE*: Si vas a usar una barra de navegación personalizada (navigationBar), y querés controlar la navegación (por ejemplo, un botón de "volver" en la barra), asegurate de:
+- "Pasar un `ref` al `AstonNavigator` para poder acceder a sus métodos de navegación.
+- "Llamar a `astonRef.current?.goBack()` desde tu componente externo.
+- "Activar `customNavigation: true` al instanciar el SDK"
+
 ### Ejemplo de themeConfig
 El objeto ThemeConfig permite personalizar la apariencia del SDK. Podes ver nuestro manual de tipografias en figma: https://www.figma.com/design/NbgHeH3KVokpLSXFqAU9sT/Manual-de-Tipograf%C3%ADas?node-id=0-1&p=f&t=n33DLLx90jaJYk9s-0 
 
@@ -174,12 +179,13 @@ Aquí un ejemplo completo:
 ```tsx
 const themeConfig: ThemeConfig = {
   colors: {
-    primary: '#7F4293',      // Color principal
-    background: '#FFFFFF',   // Fondo
-    textPrimary: '#000000',  // Texto principal
+    primary: '#AA54FC',      // Color principal
+    background: '#F7F5F7',   // Fondo
+    textPrimary: '#1A161E',  // Texto principal
     positive: '#31B700',     // Éxito
     negative: '#E80202',     // Error
     contrast: '#fff49b',     // Contraste
+    textColorForPrimaryBg: '#FFFFFF', // Color de texto para fondo primario
   },
   textStyles: {
     heading: { fontSize: 20, lineHeight: 22, fontFamily: 'Montserrat-Regular' },
@@ -190,22 +196,27 @@ const themeConfig: ThemeConfig = {
     bodyStrong: { fontSize: 16, lineHeight: 22, fontFamily: 'Montserrat-Bold' },
   },
   navBar: {
-    navBarTextStyle: { fontSize: 18, lineHeight: 24, fontFamily: 'Montserrat-Bold' },
-    navBarColor: '#FFFFFF',
+    navBarTextStyle: { fontSize: 18, lineHeight: 24, fontFamily: 'Montserrat-Bold', color: '#FFFFFF' }, // Estilo del texto de la barra de navegación
+    navBarColor: '#AA54FC', // Color de fondo de la barra de navegación
   },
   buttonStyle: {
     style: { width: '100%', alignItems: 'center', justifyContent: 'center', borderRadius: 24, elevation: 3, paddingVertical: 8 },
     primaryTextStyle: { fontSize: 16, lineHeight: 20, fontFamily: 'Montserrat-Bold', color: 'white' },
-    secondaryTextStyle: { fontSize: 16, lineHeight: 20, fontFamily: 'Montserrat-Bold', color: '#804190' },
-    primary: { backgroundColor: '#804190', borderWidth: 1.5, borderColor: '#804190' },
-    secondary: { backgroundColor: 'white', borderWidth: 1.5, borderColor: '#804190' },
+    secondaryTextStyle: { fontSize: 16, lineHeight: 20, fontFamily: 'Montserrat-Bold', color: '#AA54FC' },
+    primary: { backgroundColor: '#AA54FC', borderWidth: 1.5, borderColor: '#AA54FC' },
+    secondary: { backgroundColor: 'white', borderWidth: 1.5, borderColor: '#AA54FC' },
   },
   cardStyles: {
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 20,
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: "#F7F5F7",
+    shadowColor: '#AA54FC',
+    shadowOffset: { width: 6, height: 6 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 6,
   },
 };
 ```
