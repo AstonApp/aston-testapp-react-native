@@ -22,12 +22,12 @@ export default function EducationScreen({
 }: EducationScreenProps) {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const astonRef = useRef<AstonSDKRef>(null);
+  const customNavigation = true;
 
   AstonSDK.init({
     apiKey,
     theme: themeConfig,
     environment: 'development',
-    NavigationBar: AstonNavigationBar,
   });
 
   const goBack = () => {
@@ -36,10 +36,13 @@ export default function EducationScreen({
 
   return (
     <>
+      {customNavigation && (
+        <AstonNavigationBar title="Education" goBack={goBack} />
+      )}
       <AstonNavigator
         ref={astonRef}
         integratorUserId={integratorUserId}
-        customNavigation={true}
+        customNavigation={customNavigation}
         onExit={() => navigation.goBack()}
       />
     </>
@@ -56,7 +59,7 @@ const AstonNavigationBar = ({title, goBack}: AstonNavigationBarProps) => {
       <View style={styles.sideContainer}>
         <Pressable onPress={goBack}>
           <Text numberOfLines={1} style={styles.title}>
-            Back
+            ←
           </Text>
         </Pressable>
       </View>
