@@ -88,7 +88,7 @@ Para instalarlas en tu proyecto:
 npm install react-native-video react-native-svg
 ```
 
-## Configurar `babel.config.js`
+### Configurar `babel.config.js`
 Asegurate de que tu archivo `babel.config.js` incluya el plugin de Reanimated, ya que el Aston SDK lo utiliza para animaciones. Tu configuración debería verse así:
 
 ```javascript
