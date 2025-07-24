@@ -78,6 +78,7 @@ El SDK utiliza `peerDependencies` y `dependencies` en su `package.json` para ges
   - `react`, `react-dom`, y `react-native`: Fundamentales para cualquier app React Native.
   - `@react-navigation/native`, `@react-navigation/stack`, y `react-native-gesture-handler`: Necesarios para la navegación basada en stacks.
   - `react-native-video` y `react-native-svg`: Librerías con componentes nativos (ver abajo).
+  - `react-native-reanimated`: Para animaciones avanzadas.
 
 ### Por qué `react-native-video` y `react-native-svg` se instalan del lado del cliente
 El SDK usa `react-native-video` para reproducir contenido multimedia y `react-native-svg` para renderizar gráficos vectoriales. Estas librerías están listadas como `peerDependencies` por que ambas contienen código nativo (C++/Java/Objective-C) que debe vincularse al proyecto del cliente mediante autolinking (React Native >= 0.60) o pasos manuales. El SDK no puede realizar esta vinculación por sí mismo al instalarse como un paquete `.tgz`, ya que depende del entorno del cliente.
@@ -85,6 +86,16 @@ El SDK usa `react-native-video` para reproducir contenido multimedia y `react-na
 Para instalarlas en tu proyecto:
 ```bash
 npm install react-native-video react-native-svg
+```
+
+## Configurar `babel.config.js`
+Asegurate de que tu archivo `babel.config.js` incluya el plugin de Reanimated, ya que el Aston SDK lo utiliza para animaciones. Tu configuración debería verse así:
+
+```javascript
+module.exports = {
+  presets: ['module:@react-native/babel-preset'],
+  plugins: ['react-native-reanimated/plugin'],
+};
 ```
 
 ## Instalación del SDK
