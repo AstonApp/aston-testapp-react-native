@@ -1,6 +1,6 @@
 {
   "name": "aston-testapp-react-native",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@aston/sdk": "file:aston-sdk-1.4.0.tgz",
+    "@aston/sdk": "file:aston-sdk-1.5.2.tgz",
     "@react-navigation/native": "^7.0.15",
     "@react-navigation/stack": "^7.1.2",
     "react": "18.2.0",
